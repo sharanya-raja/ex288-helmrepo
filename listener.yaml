@@ -1,0 +1,12 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: employee-listener
+spec:
+  serviceAccountName: pipeline
+  triggers:
+  - name: employee-trigger
+    bindings:
+    - ref: employee-binding
+    template:
+      ref: pipeline-pipeline-employee
