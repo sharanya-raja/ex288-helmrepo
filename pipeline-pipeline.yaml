@@ -1,0 +1,47 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: pipeline-pipeline-employee
+spec:
+  params:
+  - name: registry_url
+    type: string
+  - name: git-url
+    type: string
+  - name: git-revision
+    type: string
+  - name: maven_repo
+    type: string
+
+  workspaces:
+  - name: shared-workspace
+
+  tasks:
+
+  - name: clone
+    taskRef:
+      name: git-clone
+      kind: ClusterTask
+    params:
+    - name: url
+      value: $(params.git-url)
+    - name: revision
+      value: $(params.git-revision)
+    workspaces:
+    - name: output
+      workspace: shared-workspace
+
+  - name: build-image
+    runAfter: ["clone"]
+    taskSpec:
+      workspaces:
+      - name: source
+      steps:
+      - name: build
+        image: registry.ocp4.example.com/ubi9/openjdk-17:latest
+        script: |
+          echo "Simulating Maven build"
+          echo "Using mirror $(params.maven_repo)"
+    workspaces:
+    - name: source
+      workspace: shared-workspace
