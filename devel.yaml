@@ -1,0 +1,51 @@
+# -----------------------------
+# Environment configuration
+# -----------------------------
+stage: devel
+
+# -----------------------------
+# Container Image
+# -----------------------------
+image:
+  repository: registry.ocp4.example.com/tarzon/customer-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# -----------------------------
+# Application replica settings
+# -----------------------------
+replicaCount: 1
+
+# -----------------------------
+# Resource configuration
+# -----------------------------
+resources:
+  limits:
+    cpu: 250m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+# -----------------------------
+# Service configuration
+# -----------------------------
+service:
+  type: ClusterIP
+  port: 8080
+
+# -----------------------------
+# Route (OpenShift)
+# -----------------------------
+route:
+  enabled: true
+  host: customer-dev.apps.example.com
+  tls:
+    termination: edge
+
+# -----------------------------
+# Environment variables
+# -----------------------------
+env:
+  - name: APP_ENV
+    value: development
