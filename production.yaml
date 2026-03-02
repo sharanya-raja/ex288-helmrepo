@@ -1,0 +1,34 @@
+# ---------------------------------
+# Production Environment Values
+# ---------------------------------
+
+stage: production
+
+replicaCount: 2
+
+image:
+  repository: registry.ocp4.example.com/tarzon/customer-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 1Gi
+  requests:
+    cpu: 200m
+    memory: 512Mi
+
+service:
+  type: ClusterIP
+  port: 8080
+
+route:
+  enabled: true
+  host: customer-production.apps.example.com
+  tls:
+    termination: edge
+
+env:
+  - name: APP_STAGE
+    value: production
